@@ -1,5 +1,8 @@
 # admin
-
+## 项目文档参照黑马教育地址
+```
+https://www.yuque.com/lipengzhou/toutiao-publish-vue/ilz3gp
+```
 ## Project setup
 ```
 npm install
