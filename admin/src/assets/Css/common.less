@@ -1,18 +1,204 @@
 /* 全局字体样式设置rem */
 html {
     font-size: 80%;
-    width: 100%;
-    height: 100%;
-  }
-  *{
-    margin: 0;
+    width    : 100%;
+    height   : 100%;
+}
+
+* {
+    margin : 0;
     padding: 0;
-  }
-  body {
-    width: 100%;
-    height: 100%;
-    /* font: 80 1.4rem/2 Arial, "\5FAE\8F6F\96C5\9ED1", "\5B8B\4F53"; */
+}
+
+body {
+    width                      : 100%;
+    height                     : 100%;
+    /* font                    : 80 1.4rem/2 Arial, "\5FAE\8F6F\96C5\9ED1", "\5B8B\4F53"; */
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    -webkit-font-smoothing: antialiased;
-    font-size: 100%;
-  }
+    -webkit-font-smoothing     : antialiased;
+    font-size                  : 100%;
+}
+
+@backSize : 100% 100%;
+@xzkColor : #013A91; //定义选中框的颜色
+@numColor : #1B65AC; //定义数字颜色
+
+@wh100: {
+    width : 100%;
+    height: 100%;
+}
+
+.flex {
+    //弹性盒子样式设置
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+}
+
+.flexbw {
+    justify-content: space-between !important;
+}
+
+.w28 {
+    width  : 28%;
+    height : 100%;
+    padding: 0 1%
+}
+
+.w40 {
+    width  : 40%;
+    height : 100%;
+    padding: 0 1%;
+}
+
+.content {
+    @wh100();
+
+    .BigDiv {
+        @wh100();
+        color         : #fff;
+        position      : absolute;
+        left          : 0;
+        top           : 0;
+        z-index       : 1000;
+        pointer-events: none;
+
+        .header {
+            width          : 100%;
+            height         : 5%;
+            background     : url(../Images/头部.png) no-repeat;
+            background-size: 100% 100%;
+            margin         : 0.5% 0;
+            display        : flex;
+            justify-content: center;
+            align-items    : center;
+            font-size      : 2.6rem;
+            font-weight    : bolder;
+            pointer-events : auto;
+        }
+
+        .DivCon {
+            width  : 100%;
+            height : 93%;
+            display: flex;
+        }
+    }
+}
+
+
+//定义几个背景框样式
+.smallBj {
+    width          : 100%;
+    height         : 22.8%;
+    background     : url(../Images/底框.png) no-repeat;
+    background-size: @backSize;
+    margin-bottom        : 1.5%;
+    pointer-events : auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1%;
+}
+.pmdk{
+    width          : 100%;
+    height         : 48%;
+    background     : url(../Images/排名底框.png) no-repeat;
+    background-size: @backSize;
+    margin-bottom        : 1.5%;
+    pointer-events : auto;
+    display: flex;
+    padding: 1%;
+}
+//小框里面的左右div样式设置
+.xkLeft{
+    width: 30%;
+    height: 100%;
+    text-align: center;
+}
+
+.xkRight{
+    width: 70%;
+    height: 100%;
+    text-align: center;
+}
+//子页面标题文字大小
+.chartTitle {
+    font-size  : 2rem;
+    font-weight: bolder;
+}
+
+//子页面上部统计左侧样式设置开始
+.numberDefaut {
+    background-color: #052556;
+    font-size       : 2rem;
+    font-weight     : bolder;
+}
+
+.NumLeft {
+    background-color: @xzkColor  !important;
+    font-size       : 1.6rem;
+    height          : 100%;
+    width           : 60%;
+    font-weight     : bolder;
+}
+
+//子页面上部统计左侧样式设置结束
+
+//子页面下部统计左侧样式设置开始
+.pad1 {
+    width  : 100%;
+    padding: 0 1%;
+}
+
+//按钮切换样式设置开始
+.select_title {
+    height: 10%;
+
+    .Ptitle {
+        font-size  : 1.6rem !important;
+        color      : white;
+        font-weight: bolder;
+    }
+
+    .afont {
+        text-decoration: none;
+        font-size      : 1.4rem !important;
+        cursor         : pointer;
+    }
+
+    .big_select {
+        display      : flex;
+        color        : white;
+        border       : 1px solid #1660D1;
+        border-radius: 3px;
+
+        .select_btn {
+            padding     : 3px 0;
+            color       : #1660D1 !important;
+            font-size   : 1.4rem !important;
+            border-right: 1px solid #1760D3;
+            cursor      : pointer;
+            width       : 80px;
+            text-align  : center;
+
+            &:last-child {
+                border-right: 0;
+            }
+        }
+
+        .btn_active {
+            background-color: #1760D3 !important;
+            color           : #fff !important;
+        }
+    }
+
+}
+
+//按钮切换样式设置结束
+
+.div_echart {
+    width : 100%;
+    height: 90%;
+}
+
+

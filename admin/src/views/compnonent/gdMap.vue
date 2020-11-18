@@ -237,7 +237,7 @@ function setCenter(arr, arr2) {
 
 /deep/.amap-marker-label {
     position: relative;
-    border: initial !important;
+    border: inherit !important;
     left: -56px !important;
 }
 

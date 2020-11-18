@@ -1,5 +1,5 @@
 # admin
-## 项目文档参照黑马教育地址
+## 项目搭建文档参照地址
 ```
 https://www.yuque.com/lipengzhou/toutiao-publish-vue/ilz3gp
 ```

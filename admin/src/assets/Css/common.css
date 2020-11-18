@@ -11,8 +11,149 @@ html {
 body {
   width: 100%;
   height: 100%;
-  /* font: 80 1.4rem/2 Arial, "\5FAE\8F6F\96C5\9ED1", "\5B8B\4F53"; */
+  /* font                    : 80 1.4rem/2 Arial, "\5FAE\8F6F\96C5\9ED1", "\5B8B\4F53"; */
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-font-smoothing: antialiased;
   font-size: 100%;
+}
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flexbw {
+  justify-content: space-between !important;
+}
+.w28 {
+  width: 28%;
+  height: 100%;
+  padding: 0 1%;
+}
+.w40 {
+  width: 40%;
+  height: 100%;
+  padding: 0 1%;
+}
+.content {
+  width: 100%;
+  height: 100%;
+}
+.content .BigDiv {
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+.content .BigDiv .header {
+  width: 100%;
+  height: 5%;
+  background: url(../Images/头部.png) no-repeat;
+  background-size: 100% 100%;
+  margin: 0.5% 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.6rem;
+  font-weight: bolder;
+  pointer-events: auto;
+}
+.content .BigDiv .DivCon {
+  width: 100%;
+  height: 93%;
+  display: flex;
+}
+.smallBj {
+  width: 100%;
+  height: 22.8%;
+  background: url(../Images/底框.png) no-repeat;
+  background-size: 100% 100%;
+  margin-bottom: 1.5%;
+  pointer-events: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1%;
+}
+.pmdk {
+  width: 100%;
+  height: 48%;
+  background: url(../Images/排名底框.png) no-repeat;
+  background-size: 100% 100%;
+  margin-bottom: 1.5%;
+  pointer-events: auto;
+  display: flex;
+  padding: 1%;
+}
+.xkLeft {
+  width: 30%;
+  height: 100%;
+  text-align: center;
+}
+.xkRight {
+  width: 70%;
+  height: 100%;
+  text-align: center;
+}
+.chartTitle {
+  font-size: 2rem;
+  font-weight: bolder;
+}
+.numberDefaut {
+  background-color: #052556;
+  font-size: 2rem;
+  font-weight: bolder;
+}
+.NumLeft {
+  background-color: #013A91 !important;
+  font-size: 1.6rem;
+  height: 100%;
+  width: 60%;
+  font-weight: bolder;
+}
+.pad1 {
+  width: 100%;
+  padding: 0 1%;
+}
+.select_title {
+  height: 10%;
+}
+.select_title .Ptitle {
+  font-size: 1.6rem !important;
+  color: white;
+  font-weight: bolder;
+}
+.select_title .afont {
+  text-decoration: none;
+  font-size: 1.4rem !important;
+  cursor: pointer;
+}
+.select_title .big_select {
+  display: flex;
+  color: white;
+  border: 1px solid #1660D1;
+  border-radius: 3px;
+}
+.select_title .big_select .select_btn {
+  padding: 3px 0;
+  color: #1660D1 !important;
+  font-size: 1.4rem !important;
+  border-right: 1px solid #1760D3;
+  cursor: pointer;
+  width: 80px;
+  text-align: center;
+}
+.select_title .big_select .select_btn:last-child {
+  border-right: 0;
+}
+.select_title .big_select .btn_active {
+  background-color: #1760D3 !important;
+  color: #fff !important;
+}
+.div_echart {
+  width: 100%;
+  height: 90%;
 }
