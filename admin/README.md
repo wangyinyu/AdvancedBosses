@@ -11,6 +11,12 @@ npm install
 ### Compiles and hot-reloads for development
 ```
 npm run serve
+运行项目自启动需要在package.json文件里面的scripts.serve里面添加--open
+例如："scripts": {
+    "serve": "vue-cli-service serve --open",
+    "build": "vue-cli-service build"
+  },
+
 ```
 
 ### Compiles and minifies for production

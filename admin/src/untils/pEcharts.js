@@ -1,13 +1,11 @@
 /**
- * highChart增强插件pHighChart
+ * pEChart增强插件ECharts
  * author:wangyinyu
- * date:2019-05-24
- * @param $
+ * date:2020-11-19
  */
 import $ from 'jquery';
 import echarts from 'echarts';
-import Vue from 'vue'
-// import "@/assets/js/JsCommon.js";
+import request from '@/untils/request';
 function setFontSize(size) {
     var windowWidth = document.body.clientWidth
     if (windowWidth > 1024 && windowWidth < 4000) {
@@ -22,11 +20,7 @@ function setFontSize(size) {
         return size * windowWidth / 1600;
     }
 }
-//获取当前登陆用户信息
-function getLoginUser() {
-    var arr = document.cookie.match(new RegExp("(^| )_PS_Session_Token_Info_=([^;]*)(;|$)"));
-    return arr && arr.length > 2 ? $.parseJSON(decodeURIComponent(arr[2])) : null;
-};
+//深拷贝
 function pEChart(setting) {
     var options = setting.ChartOptions;
     options.renderTo = (typeof setting.renderTo == "string" ? setting.renderTo : $(options.renderTo).attr("id"));
@@ -36,26 +30,9 @@ function pEChart(setting) {
     var myChart = echarts.init(document.getElementById(setting.renderTo));
     //控件初始化事件
     var create = function () {
-        var loginUser = getLoginUser();
-        if(loginUser)
-        setting.queryParam["token"] = loginUser.Token;
-        var queryParam=Vue.prototype.$qs.stringify(setting.queryParam);
-        Vue.prototype.$axios.post(setting.url,queryParam)
+        request.post(setting.url,setting.queryParam)
         .then(data => {
-            data=data.data.Data
-            if (data.error_respone) {
-                var msg = data.error_respone.Msg;
-                if (typeof (msg) != "undefined" && msg != null && (msg.indexOf("未登陆") > -1 || msg.indexOf("未登录") > -1)) {
-                   // $.psEnv.doReLogin($.psEnv.doLoginSuccess);
-                    return;
-                }
-                else {
-                    // $.messager.alert('提示', msg, 'info');
-                    Vue.prototype.$message.error(msg);
-                }
-                return false;
-            }
-
+            if(!data) return false;
             //图形类型
             var _chartType = data.ChartType;
             options = RestOptions(_chartType);
@@ -64,7 +41,6 @@ function pEChart(setting) {
             if (_chartType == "pie") {
                 options.title[0].text =0;
                 data.Series._Items.forEach(function(item){
-                 
                     options.title[0].text+=Number(item.data._Items[0].StringY);
                 });
                 options.title[0].text=options.title[0].text+(data.YaxisColumns._Items[0].name=='万平方米'?'万m²' : data.YaxisColumns._Items[0].name)
@@ -196,38 +172,31 @@ function pEChart(setting) {
                 }
             }
 
-            if (_chartType == "report") {
-                HighchartsToTable(options);
-
+            var flag = false;//这里是为了判断数据为0的时候显示暂无数据
+            for (var i = 0; i < options.series.length; i++) {
+                for (var j = 0; j < options.series[i].data.length; j++) {
+                    if (options.series[i].data[j] != 0) {
+                        flag = true;
+                        break;
+                    }
+                }
             }
-            else {
-                var flag = false;//这里是为了判断数据为0的时候显示暂无数据
-                for (var i = 0; i < options.series.length; i++) {
-                    for (var j = 0; j < options.series[i].data.length; j++) {
-                        if (options.series[i].data[j] != 0) {
-                            flag = true;
-                            break;
-                        }
+            if (!flag) {
+                var str ='<div style="font-size:26pt;color: #1760D3;width:50%;margin:0 auto;display:flex;align-items:center;height:100%;justify-content: center;"><div style="font-weight: bolder;">暂无数据</div></div>'
+                $('#' + setting.renderTo).html(str);
+            } else {
+                if (options.series[0].stack != undefined) {//处理堆叠柱状图不显示数字问题
+                    for (var i = 0; i < options.series.length; i++) {
+                        options.series[i].itemStyle.normal.label.show = false
                     }
                 }
-                if (!flag) {
-                    var str ='<div style="font-size:26pt;color: #1760D3;width:50%;margin:0 auto;display:flex;align-items:center;height:100%;justify-content: center;"><div style="font-weight: bolder;">暂无数据</div></div>'
-                    $('#' + setting.renderTo).html(str);
-                } else {
-                    if (options.series[0].stack != undefined) {//处理堆叠柱状图不显示数字问题
-                        for (var i = 0; i < options.series.length; i++) {
+                if (options.series[0].type == 'line' && options.series.length > 1) {//处理多线图也显示数字问题
+                    for (var i = 0; i < options.series.length; i++) {
+                        if (options.series[i].hasOwnProperty('itemStyle') && options.series[i].itemStyle.hasOwnProperty('normal') && options.series[i].itemStyle.normal.hasOwnProperty('label'))
                             options.series[i].itemStyle.normal.label.show = false
-                        }
                     }
-                    if (options.series[0].type == 'line' && options.series.length > 1) {//处理多线图也显示数字问题
-                        for (var i = 0; i < options.series.length; i++) {
-                            if (options.series[i].hasOwnProperty('itemStyle') && options.series[i].itemStyle.hasOwnProperty('normal') && options.series[i].itemStyle.normal.hasOwnProperty('label'))
-                                options.series[i].itemStyle.normal.label.show = false
-                        }
-                    }
-                    myChart.setOption(options, true);
                 }
-
+                myChart.setOption(options, true);
             }
             if (typeof (setting.EChartSuccess) != "undefined" && typeof (setting.EChartSuccess)=='function') {//提供一个EChartSuccess回调函数
                 setting.EChartSuccess(data,options,myChart);
@@ -500,71 +469,7 @@ function pEChart(setting) {
         }
         return currentoptions;
     }
-    /**
-    * 将Echarts图表数据生成Table表格
-    * @param div  统计图表的div的Id
-    * @param table  要生成表格的div的Id
-    * @param unitName  各个统计图的单位信息
-    */
-    var HighchartsToTable = function (options) {
-        var flag = false;//这里是为了判断数据为0的时候显示暂无数据
-        for (var i = 0; i < options.series.length; i++) {
-            for (var j = 0; j < options.series[i].data.length; j++) {
-                if (options.series[i].data[j] != 0) {
-                    flag = true;
-                    break;
-                }
-            }
-        }
-        //获取X轴集合对象
-        var categories = options.legend.data;
-        //获取series集合
-        var seriesList = options.series;
-        //获取标题
-        var title = "";
-        var table = $("#" + options.renderTo);
-        //先清空原表格内容
-        table.html("");
-        if (!flag) {
-            var str = '<div style="width:50%;margin:0 auto;display:flex;align-items:center;height:100%;justify-content: center;"><div><img src="../Css/Images/Screen/nodata.png" /></div></div>'
-            table.html(str);
-        } else {
-            //获取表格div对象
-            var tableObj = table;
-            var div = $("<div style='height:300px;width:100%; font-size:9pt;padding:10px'></div>").appendTo(tableObj);
-            //定义行元素<tr></tr>
-            var tr;
-            //定义表格体<table></table>
-            var tab;
-            //tab = $("<table   style=\"border-spacing: 20;table-layout:fixed;width:100%\" ></table>")
-            tab = $("<table   style=\"border-spacing: 20;\" ></table>")
-            tab.appendTo(div);
-            //下一行，放置数据
-            tr = $("<tr  style='height:30px; background-color: #1692F2;font-size:10pt;'></tr>")
-            tr.appendTo(tab);
-            td = $("<td  style='text-align:center;'>统计项</td>");
-            td.appendTo(tr);
-            for (var i = 0; i < categories.length; i++) {
-                td = $("<td   style='text-align:center;padding:5px;'  nowrap='nowrap'>" + categories[i] + "</td>");
-                td.appendTo(tr);
-            }
-            //分批插入数据
-            for (var i = 0; i < seriesList.length; i++) {
-                tr = $("<tr></tr>");
-                tr.appendTo(tab);
-                //先加入一个序列名称
-                td = $("<td  style='text-align:center;background-color:#00274A;padding:3px;opacity:0.8' nowrap='nowrap'>" + seriesList[i].name + "</td>");
-                td.appendTo(tr);
-                //遍历数据点追加数据值
-                for (var j = 0; j < seriesList[i].data.length; j++) {
-                    td = $("<td   style='text-align:center;background-color:#00274A;padding:3px;opacity:0.8; ' nowrap='nowrap'>" + seriesList[i].data[j] + "</td>");
-                    td.appendTo(tr);
-                }
-                tr = $("<tr style='height:3px;background-color:red'></tr>");
-                tr.appendTo(tab);
-            }
-        }
-    }
+    //ehcarts节点点击事件
     if (typeof (setting.clickParam) != "undefined" && setting.clickParam != null) {
         myChart.on('click', function (params) {
             if (!String.IsNullOrEmptyOrWhiteSpace(setting.clickParam.url)) {
@@ -593,6 +498,6 @@ function pEChart(setting) {
 // 将这个插件对象抛出
 export default {
     install(Vue, options) {
-      Vue.prototype.pEChart = pEChart
+      Vue.prototype.pEChart = pEChart;
     }
 }
